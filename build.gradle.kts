@@ -14,16 +14,21 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 }
 
+val wsdlPath = "$projectDir/src/main/resources/wsdl/"
+
 extra["cxfVersion"] = "3.3.2"
 extra["cxfPluginVersion"] = "3.2.2"
 wsdl2java {
-    wsdlDir = file("$projectDir/src/main/wsdl")
+    wsdlDir = file(wsdlPath)
     wsdlsToGenerate = listOf(
-        listOf("-p", "com.cunningbird.templates.contractfirstsoap", "-autoNameResolution", "$projectDir/src/main/wsdl/HelloService.wsdl")
+        listOf("-p", "com.cunningbird.contractfirst.wsdl.contract", "-autoNameResolution", "$wsdlPath/PetstoreService.wsdl")
     )
 }
 
 sourceSets {
+    main {
+        resources
+    }
     test {
         java {
             srcDir("${buildDir}/generated/wsdl")
@@ -39,7 +44,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/cunningbird-lab/contract-frist-soap")
+            url = uri("https://maven.pkg.github.com/cunningbird/contract-first-wsdl")
             credentials {
                 username = System.getProperty("publishRegistryUsername")
                 password = System.getProperty("publishRegistryPassword")
@@ -48,8 +53,8 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.cunningbird.templates"
-            artifactId = "contract-first-soap"
+            groupId = "com.cunningbird.contractfirst.wsdl"
+            artifactId = "contract"
             version = "1.0.0"
             from(components["java"])
         }
